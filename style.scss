@@ -1,0 +1,19 @@
+* {
+  font-family: "CaskaydiaMono NF";
+  font-size: 16px;
+}
+
+window {
+  background-color: transparent;
+}
+
+window > box {
+  margin: 4px;
+}
+
+box label {
+  padding: 0.25em;
+  border-radius: 0.25em;
+  background-color: black;
+  color: white;
+}
