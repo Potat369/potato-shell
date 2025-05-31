@@ -114,7 +114,7 @@ local function Memory()
 
 	return Widget.Label({
 		label = bind(free):as(function(f)
-			return repr(" ", string.format("%s GiB / %s Gib", string.format("%.2f", f), total))
+			return repr(" ", string.format("%s GiB / %s GiB", string.format("%.2f", f), total))
 		end),
 	})
 end
