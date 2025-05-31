@@ -20,7 +20,7 @@
     {
       packages.${system}.default = astal.lib.mkLuaPackage {
         inherit pkgs;
-        name = "pidgets";
+        name = "potato-shell";
         src = ./app;
 
         extraPackages =
