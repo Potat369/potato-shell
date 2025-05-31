@@ -133,7 +133,7 @@ local function Swap()
 		-- 	return u > 0
 		-- end),
 		label = bind(used):as(function(u)
-			return repr("󰾴", string.format("%s GiB / %s Gib", string.format("%.2f", u), total))
+			return repr("󰾴", string.format("%s GiB / %s GiB", string.format("%.2f", u), total))
 		end),
 	})
 end
