@@ -205,7 +205,32 @@ local function BatteryLevel()
 			end
 		end),
 		label = bind(bat, "percentage"):as(function(p)
-			return repr("󰁿", tostring(math.floor(p * 100)) .. "%")
+			local is_charging = (bat.state == "CHARGING" or bat.state == "PENDING_CHARGE")
+
+			local function get_icon()
+				if p < 0.1 then
+					return is_charging and "󰢜 " or "󰁺"
+				elseif p < 0.2 then
+					return is_charging and "󰂆 " or "󰁻"
+				elseif p < 0.3 then
+					return is_charging and "󰂇 " or "󰁼"
+				elseif p < 0.4 then
+					return is_charging and "󰂈 " or "󰁽"
+				elseif p < 0.5 then
+					return is_charging and "󰂉 " or "󰁾"
+				elseif p < 0.6 then
+					return is_charging and "󰂊 " or "󰁿"
+				elseif p < 0.7 then
+					return is_charging and "󰂋 " or "󰂀"
+				elseif p < 0.8 then
+					return is_charging and "󰂊 " or "󰂁"
+				elseif p < 0.9 then
+					return is_charging and "󰂋 " or "󰂂"
+				else
+					return is_charging and "󰂅 " or "󰁹"
+				end
+			end
+			return repr(get_icon(), tostring(math.floor(p * 100)) .. "%")
 		end),
 	})
 end
