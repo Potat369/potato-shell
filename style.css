@@ -14,6 +14,6 @@ window > box {
 box label {
   padding: 0.25em;
   border-radius: 0.25em;
-  background-color: black;
-  color: white;
+  background-color: @theme_bg_color;
+  color: @theme_fg_color;
 }
