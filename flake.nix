@@ -30,7 +30,6 @@
             network
           ]
           ++ (with pkgs; [
-            dart-sass
             brightnessctl
             libgtop
           ]);
