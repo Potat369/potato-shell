@@ -151,7 +151,7 @@ local function DiskUsage()
 
 	return Widget.Label({
 		label = bind(used):as(function(u)
-			return repr(" ", string.format("%.1f GiB / %.1f GiB", u / 2 ^ 30, total / 2 ^ 30))
+			return repr(" ", string.format("%.1f GiB / %.1f GiB", u / 2 ^ 30, total / 2 ^ 30))
 		end),
 	})
 end
