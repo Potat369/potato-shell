@@ -27,6 +27,7 @@
           with astal.packages.${system};
           [
             battery
+            wireplumber
             network
           ]
           ++ (with pkgs; [

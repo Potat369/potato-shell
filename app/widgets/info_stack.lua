@@ -9,6 +9,7 @@ local Variable = astal.Variable
 local Anchor = gtk.Astal.WindowAnchor
 local Battery = astal.require("AstalBattery")
 local Network = astal.require("AstalNetwork")
+local Wp = astal.require("AstalWp")
 local bind = astal.bind
 local exec = astal.exec
 
@@ -190,6 +191,33 @@ local function Uptime()
 	})
 end
 
+local function Volume()
+	local speaker = Wp.get_default().audio.default_speaker
+
+	return Widget.EventBox({
+		on_scroll_event = function(_, event)
+			speaker.volume =
+				math.min(math.max(speaker.volume + (tonumber(event.delta_y) < 0 and 0.05 or -0.05), 0), 150)
+		end,
+		Widget.Label({
+			label = bind(speaker, "volume"):as(function(v)
+				local function get_icon()
+					if v <= 0.01 then
+						return " "
+					elseif v <= 0.25 then
+						return " "
+					elseif v <= 0.75 then
+						return " "
+					else
+						return " "
+					end
+				end
+				return repr(get_icon(), math.floor(v * 100 + 0.5) .. "%")
+			end),
+		}),
+	})
+end
+
 local function BatteryLevel()
 	local bat = Battery.get_default()
 
@@ -257,6 +285,7 @@ return function()
 				spacing = 4,
 				Brightness(),
 				BatteryLevel(),
+				Volume(),
 				Widget.Box({ hexpand = true }),
 				network.Speed,
 				network.Id,
