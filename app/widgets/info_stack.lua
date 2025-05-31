@@ -4,6 +4,7 @@ local astal = require("astal")
 local lgi = require("lgi")
 local Gdk = lgi.Gdk
 local GTop = lgi.GTop
+local GLib = astal.require("GLib")
 local Variable = astal.Variable
 local Anchor = gtk.Astal.WindowAnchor
 local Battery = astal.require("AstalBattery")
@@ -156,6 +157,39 @@ local function DiskUsage()
 	})
 end
 
+local function getTime(seconds)
+	if seconds < 60 then
+		return math.floor(seconds) .. "s"
+	elseif seconds < 3600 then
+		return math.floor(seconds / 60) .. "m"
+	else
+		return string.format("%.1f", seconds / 3600) .. "h"
+	end
+end
+
+local function Time(format, icon)
+	local time = Variable(""):poll(1000, function()
+		return repr(icon, GLib.DateTime.new_now_local():format(format))
+	end)
+
+	return Widget.Label({
+		label = time(),
+	})
+end
+
+local function Uptime()
+	local uptime = GTop.glibtop_uptime()
+	GTop.glibtop_get_uptime(uptime)
+	local upt = Variable(0):poll(1000, function()
+		GTop.glibtop_get_uptime(uptime)
+		return repr(" ", getTime(uptime.uptime))
+	end)
+
+	return Widget.Label({
+		label = upt(),
+	})
+end
+
 local function BatteryLevel()
 	local bat = Battery.get_default()
 
@@ -189,7 +223,10 @@ return function()
 			spacing = 4,
 			Widget.Box({
 				spacing = 4,
+				Uptime(),
 				Widget.Box({ hexpand = true }),
+				Time("%X", " "),
+				Time("%A %e", " "),
 			}),
 			Widget.Box({
 				spacing = 4,
