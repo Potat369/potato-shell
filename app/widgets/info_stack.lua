@@ -7,11 +7,49 @@ local GTop = lgi.GTop
 local Variable = astal.Variable
 local Anchor = gtk.Astal.WindowAnchor
 local Battery = astal.require("AstalBattery")
+local Network = astal.require("AstalNetwork")
 local bind = astal.bind
 local exec = astal.exec
 
 local function repr(icon, value)
 	return icon .. " " .. value
+end
+
+local function NetworkUsage()
+	local network = Network.get_default()
+	local id
+	local speed
+	if network.primary == "WIFI" then
+		local wifi = network.wifi
+		id = Widget.Label({
+			label = bind(wifi, "ssid"):as(function(s)
+				return repr(" ", s)
+			end),
+		})
+		speed = Widget.Label({
+			label = bind(wifi, "bandwidth"):as(function(s)
+				return repr(" ", s)
+			end),
+		})
+	else
+		local wired = network.wired
+		local internet = Variable()
+		id = Widget.Label({
+			label = bind(wired, "internet"):as(function(i)
+				return repr(i == "CONNECTED" and " " or " ", "Wired")
+			end),
+		})
+		speed = Widget.Label({
+			label = bind(wired, "speed"):as(function(s)
+				return repr(" ", s)
+			end),
+		})
+	end
+
+	return {
+		Id = id,
+		Speed = speed,
+	}
 end
 
 local function CpuUsage()
@@ -141,6 +179,7 @@ end
 -- TODO: Network, Volume, Temperature, Clock/Data/Calendar, GPU Usage, Uptime?
 
 return function()
+	local network = NetworkUsage()
 	return Widget.Window({
 		anchor = Anchor.RIGHT + Anchor.BOTTOM + Anchor.LEFT,
 		layer = "BACKGROUND",
@@ -155,8 +194,10 @@ return function()
 			Widget.Box({
 				spacing = 4,
 				Brightness(),
-				Widget.Box({ hexpand = true }),
 				BatteryLevel(),
+				Widget.Box({ hexpand = true }),
+				network.Speed,
+				network.Id,
 			}),
 			Widget.Box({
 				spacing = 4,
