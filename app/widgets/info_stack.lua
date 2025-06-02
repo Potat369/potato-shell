@@ -17,6 +17,12 @@ local function repr(icon, value)
 	return icon .. " " .. value
 end
 
+local function User()
+	return Widget.Label({
+		label = repr("", exec('sh -c "echo $USER"')),
+	})
+end
+
 local function NetworkUsage()
 	local network = Network.get_default()
 	local wifi = network.wifi
@@ -331,6 +337,7 @@ return function()
 				Widget.Box({ hexpand = true }),
 				network.Speed,
 				network.Id,
+				User(),
 			}),
 			Widget.Box({
 				spacing = 4,
