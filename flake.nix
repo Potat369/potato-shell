@@ -21,7 +21,7 @@
       packages.${system}.default = astal.lib.mkLuaPackage {
         inherit pkgs;
         name = "potato-shell";
-        src = ./app;
+        src = ./.;
 
         extraPackages =
           with astal.packages.${system};
