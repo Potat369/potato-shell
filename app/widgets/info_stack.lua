@@ -254,6 +254,13 @@ end
 local function BatteryLevel()
 	local bat = Battery.get_default()
 
+	local b = Variable.derive({ bind(bat, "percentage"), bind(bat, "state") }, function(p, s)
+		return {
+			percentage = p,
+			state = s,
+		}
+	end)
+
 	return Widget.Label({
 		visible = bind(bat, "is-present"),
 		tooltip_text = bind(bat, "state"):as(function(s)
@@ -265,8 +272,10 @@ local function BatteryLevel()
 				return "Full"
 			end
 		end),
-		label = bind(bat, "percentage"):as(function(p)
-			local is_charging = (bat.state == "CHARGING" or bat.state == "PENDING_CHARGE")
+		label = b():as(function(baby)
+			local p = baby.percentage
+			local state = baby.state
+			local is_charging = (state == "CHARGING" or state == "PENDING_CHARGE")
 
 			local function get_icon()
 				if p < 0.1 then
