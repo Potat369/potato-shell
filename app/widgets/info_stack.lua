@@ -19,38 +19,71 @@ end
 
 local function NetworkUsage()
 	local network = Network.get_default()
-	local id
-	local speed
-	if network.primary == "WIFI" then
-		local wifi = network.wifi
-		id = Widget.Label({
-			label = bind(wifi, "ssid"):as(function(s)
-				return repr(" ", s)
-			end),
-		})
-		speed = Widget.Label({
-			label = bind(wifi, "bandwidth"):as(function(s)
-				return repr(" ", s)
-			end),
-		})
-	else
-		local wired = network.wired
-		local internet = Variable()
-		id = Widget.Label({
-			label = bind(wired, "internet"):as(function(i)
-				return repr(i == "CONNECTED" and " " or " ", "Wired")
-			end),
-		})
-		speed = Widget.Label({
-			label = bind(wired, "speed"):as(function(s)
-				return repr(" ", s)
-			end),
-		})
-	end
+	local wifi = network.wifi
+	local wifiv = Variable.derive({
+		bind(wifi, "strength"),
+		bind(wifi, "ssid"),
+		bind(wifi, "internet"),
+	}, function(strength, ssid, internet)
+		return {
+			strength = strength,
+			ssid = ssid,
+			internet = internet,
+		}
+	end)
+	local wired = network.wired
 
 	return {
-		Id = id,
-		Speed = speed,
+		Id = bind(network, "primary"):as(function(p)
+			if p == "WIFI" then
+				return Widget.Label({
+					label = wifiv():as(function(wi)
+						local function get_icon()
+							local connected = wi.internet == "CONNECTED"
+							if wi.internet == "CONNECTING" then
+								return "󱛇 "
+							elseif wi.strength < 20 then
+								return connected and "󰤯 " or "󰤫 "
+							elseif wi.strength < 40 then
+								return connected and "󰤟 " or "󰤠 "
+							elseif wi.strength < 60 then
+								return connected and "󰤢 " or "󰤣 "
+							elseif wi.strength < 80 then
+								return connected and "󰤥 " or "󰤦 "
+							else
+								return connected and "󰤨 " or "󰤩 "
+							end
+						end
+						return repr(get_icon(), wi.ssid)
+					end),
+				})
+			elseif p == "WIRED" then
+				return Widget.Label({
+					label = bind(wired, "internet"):as(function(i)
+						return repr(i == "CONNECTED" and "󱐥" or "󱐤", "Wired")
+					end),
+				})
+			else
+				return Widget.Label({
+					label = repr(" ", "Unknown"),
+				})
+			end
+		end),
+		Speed = bind(network, "primary"):as(function(p)
+			if p == "WIFI" then
+				return Widget.Label({
+					label = bind(wifi, "bandwidth"):as(function(s)
+						return repr(" ", s)
+					end),
+				})
+			else
+				return Widget.Label({
+					label = bind(wired, "speed"):as(function(s)
+						return repr(" ", s)
+					end),
+				})
+			end
+		end),
 	}
 end
 
