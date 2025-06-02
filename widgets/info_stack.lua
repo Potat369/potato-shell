@@ -19,7 +19,7 @@ end
 
 local function User()
 	return Widget.Label({
-		label = repr("", exec('sh -c "echo $USER"')),
+		label = repr(" ", exec('sh -c "echo $USER"')),
 	})
 end
 
