@@ -2,6 +2,7 @@ local App = require("astal.gtk3.app")
 local astal = require("astal")
 
 local InfoStack = require("widgets/info_stack")
+local Bar = require("widgets/bar")
 
 local function src(path)
 	local str = debug.getinfo(2, "S").source:sub(2)
@@ -12,6 +13,7 @@ end
 App:start({
 	css = src("style.css"),
 	main = function()
+		Bar()
 		InfoStack()
 	end,
 })

@@ -30,6 +30,7 @@
             wireplumber
             network
             notifd
+            hyprland
           ]
           ++ (with pkgs; [
             brightnessctl

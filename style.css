@@ -1,17 +1,19 @@
 * {
   font-family: "FiraMono Nerd Font";
   font-size: 16px;
+    min-height: 0px;
+    min-width: 0px;
 }
 
 window {
   background-color: transparent;
 }
 
-window > box {
+.info_stack {
   margin: 4px;
 }
 
-box label {
+.info_stack label {
   padding: 0.25em;
   border-radius: 0.25em;
   background-color: @window_bg_color;
@@ -20,4 +22,39 @@ box label {
 
 popover {
     background-color: @popover_bg_color;
+}
+
+.workspaces {
+    background-color: @window_bg_color;
+    margin-top: 4px;
+    padding: 4px;
+    border-radius: 0.25em;
+}
+
+.workspace {
+    padding: 0px;
+    padding-left: 4px;
+    padding-right: 4px;
+    border-radius: 4px;
+    background-color: @window_bg_color;
+}
+
+.workspace:hover {
+    background-color: #282727;
+}
+.workspace:active {
+    background-color: #393836;
+}
+
+.workspace.focused {
+    background-color: #282727;
+    color: @green_1;
+}
+
+.workspace.empty {
+    color: #625e5a;
+}
+
+.workspace label {
+    padding: 0px;
 }
