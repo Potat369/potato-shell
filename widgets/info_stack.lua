@@ -318,6 +318,7 @@ return function()
 		layer = "BACKGROUND",
 		exclusivity = 0,
 		Widget.Box({
+			class_name = "info_stack",
 			vertical = true,
 			spacing = 4,
 			Widget.Box({
