@@ -14,6 +14,10 @@ window > box {
 box label {
   padding: 0.25em;
   border-radius: 0.25em;
-  background-color: @popover_bg_color;
-  color: @popover_fg_color;
+  background-color: @window_bg_color;
+  color: @window_fg_color;
+}
+
+popover {
+    background-color: @popover_bg_color;
 }
