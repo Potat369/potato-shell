@@ -26,6 +26,7 @@ end
 local function NetworkUsage()
 	local network = Network.get_default()
 	local wifi = network.wifi
+	local wired = network.wired
 	local wifiv = Variable.derive({
 		bind(wifi, "strength"),
 		bind(wifi, "ssid"),
@@ -37,7 +38,6 @@ local function NetworkUsage()
 			internet = internet,
 		}
 	end)
-	local wired = network.wired
 
 	return {
 		Id = bind(network, "primary"):as(function(p)
@@ -311,7 +311,7 @@ local function BatteryLevel()
 	})
 end
 
--- TODO: Network, Volume, Temperature, Clock/Data/Calendar, GPU Usage, Uptime?
+-- TODO: Temperature, Calendar, GPU Usage
 
 return function()
 	local network = NetworkUsage()

@@ -29,6 +29,7 @@
             battery
             wireplumber
             network
+            notifd
           ]
           ++ (with pkgs; [
             brightnessctl
