@@ -324,8 +324,8 @@ return function()
 				spacing = 4,
 				Uptime(),
 				Widget.Box({ hexpand = true }),
-				Time("%X", " "),
-				Time("%A %e", " "),
+				Time("%r", " "),
+				Time("%F", " "),
 			}),
 			Widget.Box({
 				spacing = 4,
