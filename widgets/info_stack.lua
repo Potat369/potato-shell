@@ -311,8 +311,6 @@ local function BatteryLevel()
 	})
 end
 
--- TODO: Temperature, Calendar, GPU Usage
-
 return function()
 	local network = NetworkUsage()
 	return Widget.Window({
