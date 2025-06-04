@@ -146,15 +146,14 @@ local function Memory()
 	local mem = GTop.glibtop_mem()
 	GTop.glibtop_get_mem(mem)
 
-	local total = string.format("%.2f", mem.total / 1073741824)
 	local free = Variable(0):poll(2000, function()
 		GTop.glibtop_get_mem(mem)
-		return (mem.total - mem.free - mem.cached) / 1073741824
+		return GLib.format_size(mem.total - mem.free - mem.cached)
 	end)
 
 	return Widget.Label({
 		label = bind(free):as(function(f)
-			return repr(" ", string.format("%s GiB / %s GiB", string.format("%.2f", f), total))
+			return repr(" ", string.format("%s / %s", f, GLib.format_size(mem.total)))
 		end),
 	})
 end
@@ -163,10 +162,9 @@ local function Swap()
 	local swap = GTop.glibtop_swap()
 	GTop.glibtop_get_swap(swap)
 
-	local total = string.format("%.2f", swap.total / 1073741824)
 	local used = Variable(0):poll(2000, function()
 		GTop.glibtop_get_swap(swap)
-		return swap.used / 1073741824
+		return GLib.format_size(swap.used)
 	end)
 
 	return Widget.Label({
@@ -174,7 +172,7 @@ local function Swap()
 		-- 	return u > 0
 		-- end),
 		label = bind(used):as(function(u)
-			return repr("󰾴", string.format("%s GiB / %s GiB", string.format("%.2f", u), total))
+			return repr("󰾴", string.format("%s / %s", u, GLib.format_size(swap.total)))
 		end),
 	})
 end
@@ -192,7 +190,7 @@ local function DiskUsage()
 
 	return Widget.Label({
 		label = bind(used):as(function(u)
-			return repr(" ", string.format("%.1f GiB / %.1f GiB", u / 2 ^ 30, total / 2 ^ 30))
+			return repr(" ", string.format("%s / %s", GLib.format_size(u), GLib.format_size(total)))
 		end),
 	})
 end
@@ -268,6 +266,23 @@ local function BatteryLevel()
 	end)
 
 	return Widget.Label({
+		class_name = b():as(function(baby)
+			local class = "battery_level"
+			local is_charging = (baby.state == "CHARGING" or baby.state == "PENDING_CHARGE")
+
+			if is_charging then
+				class = repr(class, "charging")
+			else
+				if baby.percentage < 0.1 then
+					class = repr(class, "10")
+				elseif baby.percentage < 0.2 then
+					class = repr(class, "20")
+				elseif baby.percentage < 0.3 then
+					class = repr(class, "30")
+				end
+			end
+			return class
+		end),
 		visible = bind(bat, "is-present"),
 		tooltip_text = bind(bat, "state"):as(function(s)
 			if s == "CHARGING" then
