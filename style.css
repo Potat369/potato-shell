@@ -38,6 +38,7 @@ popover {
     padding-right: 4px;
     border-radius: 4px;
     background-color: @window_bg_color;
+    border-width: 0px;
 }
 
 .workspace:hover {
