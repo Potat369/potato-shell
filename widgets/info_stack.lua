@@ -12,14 +12,11 @@ local Network = astal.require("AstalNetwork")
 local Wp = astal.require("AstalWp")
 local bind = astal.bind
 local exec = astal.exec
-
-local function repr(icon, value)
-	return icon .. " " .. value
-end
+local concat = require("lib").concat
 
 local function User()
 	return Widget.Label({
-		label = repr(" ", exec('sh -c "echo $USER"')),
+		label = concat(" ", exec('sh -c "echo $USER"')),
 	})
 end
 
@@ -60,18 +57,18 @@ local function NetworkUsage()
 								return connected and "󰤨 " or "󰤩 "
 							end
 						end
-						return repr(get_icon(), wi.ssid)
+						return concat(get_icon(), wi.ssid)
 					end),
 				})
 			elseif p == "WIRED" then
 				return Widget.Label({
 					label = bind(wired, "internet"):as(function(i)
-						return repr(i == "CONNECTED" and "󱐥" or "󱐤", "Wired")
+						return concat(i == "CONNECTED" and "󱐥" or "󱐤", "Wired")
 					end),
 				})
 			else
 				return Widget.Label({
-					label = repr(" ", "Unknown"),
+					label = concat(" ", "Unknown"),
 				})
 			end
 		end),
@@ -79,13 +76,13 @@ local function NetworkUsage()
 			if p == "WIFI" then
 				return Widget.Label({
 					label = bind(wifi, "bandwidth"):as(function(s)
-						return repr(" ", s)
+						return concat(" ", s)
 					end),
 				})
 			else
 				return Widget.Label({
 					label = bind(wired, "speed"):as(function(s)
-						return repr(" ", s)
+						return concat(" ", s)
 					end),
 				})
 			end
@@ -120,7 +117,7 @@ local function CpuUsage()
 
 	return Widget.Label({
 		label = bind(usage):as(function(u)
-			return repr(" ", string.format("%.1f%%", u))
+			return concat(" ", string.format("%.1f%%", u))
 		end),
 	})
 end
@@ -136,7 +133,7 @@ local function Brightness()
 		end,
 		Widget.Label({
 			label = bind(curr):as(function(c)
-				return repr(" ", math.floor(c / total * 100) .. "%")
+				return concat(" ", math.floor(c / total * 100) .. "%")
 			end),
 		}),
 	})
@@ -153,7 +150,7 @@ local function Memory()
 
 	return Widget.Label({
 		label = bind(free):as(function(f)
-			return repr(" ", string.format("%s / %s", f, GLib.format_size(mem.total)))
+			return concat(" ", string.format("%s / %s", f, GLib.format_size(mem.total)))
 		end),
 	})
 end
@@ -172,7 +169,7 @@ local function Swap()
 		-- 	return u > 0
 		-- end),
 		label = bind(used):as(function(u)
-			return repr("󰾴", string.format("%s / %s", u, GLib.format_size(swap.total)))
+			return concat("󰾴", string.format("%s / %s", u, GLib.format_size(swap.total)))
 		end),
 	})
 end
@@ -190,7 +187,7 @@ local function DiskUsage()
 
 	return Widget.Label({
 		label = bind(used):as(function(u)
-			return repr(" ", string.format("%s / %s", GLib.format_size(u), GLib.format_size(total)))
+			return concat(" ", string.format("%s / %s", GLib.format_size(u), GLib.format_size(total)))
 		end),
 	})
 end
@@ -207,7 +204,7 @@ end
 
 local function Time(format, icon)
 	local time = Variable(""):poll(1000, function()
-		return repr(icon, GLib.DateTime.new_now_local():format(format))
+		return concat(icon, GLib.DateTime.new_now_local():format(format))
 	end)
 
 	return Widget.Label({
@@ -220,7 +217,7 @@ local function Uptime()
 	GTop.glibtop_get_uptime(uptime)
 	local upt = Variable(0):poll(1000, function()
 		GTop.glibtop_get_uptime(uptime)
-		return repr(" ", getTime(uptime.uptime))
+		return concat(" ", getTime(uptime.uptime))
 	end)
 
 	return Widget.Label({
@@ -249,7 +246,7 @@ local function Volume()
 						return " "
 					end
 				end
-				return repr(get_icon(), math.floor(v * 100 + 0.5) .. "%")
+				return concat(get_icon(), math.floor(v * 100 + 0.5) .. "%")
 			end),
 		}),
 	})
@@ -271,14 +268,14 @@ local function BatteryLevel()
 			local is_charging = (baby.state == "CHARGING" or baby.state == "PENDING_CHARGE")
 
 			if is_charging then
-				class = repr(class, "charging")
+				class = concat(class, "charging")
 			else
 				if baby.percentage < 0.1 then
-					class = repr(class, "10")
+					class = concat(class, "10")
 				elseif baby.percentage < 0.2 then
-					class = repr(class, "20")
+					class = concat(class, "20")
 				elseif baby.percentage < 0.3 then
-					class = repr(class, "30")
+					class = concat(class, "30")
 				end
 			end
 			return class
@@ -321,7 +318,7 @@ local function BatteryLevel()
 					return is_charging and "󰂅 " or "󰁹"
 				end
 			end
-			return repr(get_icon(), tostring(math.floor(p * 100)) .. "%")
+			return concat(get_icon(), tostring(math.floor(p * 100)) .. "%")
 		end),
 	})
 end
